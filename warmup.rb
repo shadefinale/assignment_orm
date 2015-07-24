@@ -5,7 +5,7 @@ class Article
         "SELECT articles.*"
     end
 
-    def find(*ids)
+    def self.find(*ids)
       if ids.flatten.length == 1
         return "SELECT articles.* FROM articles WHERE articles.id=#{ids.flatten[0]} LIMIT 1"
       else
@@ -30,7 +30,16 @@ class Article
       "SELECT COUNT(*) FROM articles"
     end
 
-    def self.where()
+    def self.where(**opts)
+      result = "WHERE "
+      opts.each do |col, val|
+        if val.is_a? String
+          result += col.to_s + "='#{val}' AND "
+        else
+          result += col.to_s + "=#{val} AND "
+        end
+      end
+      result[0..-6]
     end
 end
 
